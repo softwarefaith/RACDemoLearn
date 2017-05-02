@@ -21,15 +21,263 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    
-    
+    //文本事件
+  //  [self textFieldRAC];
+    //[self gesRAC];
+ //   [self notifyRAC];
    // [self RACSignalDemo];
+    
+    [self switchRACWithIndex:5];
+}
+
+#pragma mark - RAC总类
+-(void)switchRACWithIndex:(NSInteger)index{
+    
+    switch (index) {
+        case 5:{
+            
+            [self demoOfBind];
+            break;
+        }
+        case 4:{
+            
+            [self demoOfRACGroupSubject];
+            break;
+        }
+        case 0://RAC
+        {
+            [self RACSignalDemo];
+            break;
+        }
+        case 1:{
+            
+            [self demoOfRACSubject];
+            break;
+        }
+        case 2:{
+            [self demoOfRACBehaviorSubject];
+            break;
+        }
+        case 3:{
+            
+            [self demoOfRACReplaySubject];
+            break;
+        }
+        
+            break;
+            
+        default:
+            break;
+    }
 }
 
 #pragma makr -事件
 
 #pragma mark -- 文本事件
-- (void)
+- (void)textFieldRAC{
+    
+    _rac_TextField = ({
+    
+        UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(100, 100, 200, 40)];
+        textField.borderStyle = UITextBorderStyleLine;
+        textField;
+    
+    });
+    [self.view addSubview:_rac_TextField];
+    
+//    [[self.rac_TextField rac_signalForControlEvents:UIControlEventEditingChanged] subscribeNext:^(NSString * x) {
+//        
+//        NSLog(@"textFiled = %@",x);
+//    }];
+    
+    [self.rac_TextField.rac_textSignal subscribeNext:^(NSString * x) {
+        NSLog(@"textFiled222 = %@",x);
+    }];
+    
+}
+#pragma mark --手势
+-(void)gesRAC{
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] init];
+    
+    [self.view addGestureRecognizer:tap];
+    [[tap rac_gestureSignal] subscribeNext:^(UITapGestureRecognizer *tap) {
+        NSLog(@"用户点击");
+    }];
+}
+
+#pragma mark - Notify
+-(void)notifyRAC{
+    
+RACSignal *signal = [[NSNotificationCenter defaultCenter] rac_addObserverForName:UIApplicationDidBecomeActiveNotification object:@"231"];
+    
+    [signal subscribeNext:^(NSNotification * x) {
+        
+        NSLog(@"我收到了通知%@",x.object);
+    }];
+    
+}
+
+-(void)demoOfBind{
+    
+    
+    RACSignal *A  = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+        //实际数据来源
+        NSLog(@"A开始发送数据");
+        [subscriber sendNext:@"A"];
+        return nil;
+    }];
+    
+    RACSignal *C  = [A bind:^RACStreamBindBlock{
+        
+        
+    
+        return ^RACSignal *(id value, BOOL *stop){
+            NSLog(@"这里C也受到了==%@",value);
+            return [RACSignal return:value];
+        };
+        
+    }];
+    
+    
+    [C subscribeNext:^(id x) {
+        
+        
+        NSLog(@"C发送==%@",x);
+    }];
+    
+//    [A subscribeNext:^(id x) {
+//        
+//    
+//        NSLog(@"A发送==%@",x);
+//    }];
+//    
+    
+    
+}
+
+- (void)demoOfRACGroupSubject{
+    
+   // RACGroupedSignal *groupSubject = [RACGroupedSignal signalWithKey:@"AAAAA"];
+    
+    
+   RACSubject *subject = [RACSubject subject];
+   RACSignal *signal = [ subject groupBy:^id<NSCopying>(id object) {
+       
+       NSLog(@"groupBy");
+       return nil;
+    } transform:^id(id object) {
+        NSLog(@"transform");
+
+        return nil;
+    }];
+    
+    [signal subscribeNext:^(id x) {
+        
+        NSLog(@"我来了==%@",x);
+    }];
+    
+   
+    
+}
+
+
+- (void)demoOfRACReplaySubject{
+    
+    
+    RACReplaySubject *behaviorSubject = [RACReplaySubject replaySubjectWithCapacity:6];
+    
+    [behaviorSubject  subscribeNext:^(id x) {
+        NSLog(@"接收到了数据A-%@",x);
+        
+    }];
+    
+    [behaviorSubject sendNext:@"001"];
+    
+    [behaviorSubject subscribeNext:^(id x) {
+        
+        NSLog(@"接收到了数据B-%@",x);
+    }];
+    
+    [behaviorSubject sendNext:@"002"];
+    
+    
+    [behaviorSubject subscribeNext:^(id x) {
+        
+        NSLog(@"接收到了数据C-%@",x);
+    }];
+    
+    //[behaviorSubject sendNext:@"003"];
+    
+    
+}
+
+
+- (void)demoOfRACBehaviorSubject{
+    
+    
+    RACBehaviorSubject *behaviorSubject = [RACBehaviorSubject behaviorSubjectWithDefaultValue:@(000)];
+    
+    [behaviorSubject  subscribeNext:^(id x) {
+        NSLog(@"接收到了数据A-%@",x);
+
+    }];
+    
+    [behaviorSubject sendNext:@"001"];
+    
+    [behaviorSubject subscribeNext:^(id x) {
+        
+        NSLog(@"接收到了数据B-%@",x);
+    }];
+    
+    [behaviorSubject sendNext:@"002"];
+    
+    
+    [behaviorSubject subscribeNext:^(id x) {
+        
+        NSLog(@"接收到了数据C-%@",x);
+    }];
+    
+    [behaviorSubject sendNext:@"003"];
+
+    
+}
+
+- (void)demoOfRACSubject{
+    
+    RACSubject *subject = [RACSubject subject];
+    
+    [subject sendNext:@"000000"];
+
+    [subject subscribeNext:^(id x) {
+        
+        NSLog(@"接收到了数据A-%@",x);
+    }];
+    [subject sendNext:@"001"];
+
+    [subject subscribeNext:^(id x) {
+        
+        NSLog(@"接收到了数据B-%@",x);
+    }];
+    
+    [subject sendNext:@"002"];
+    
+    
+    [subject subscribeNext:^(id x) {
+        
+        NSLog(@"接收到了数据C-%@",x);
+    } completed:^{
+        NSLog(@"C完成了");
+    }];
+    
+    [subject subscribeCompleted:^{
+        
+        NSLog(@"订阅完成了");
+    }];
+    
+    [subject sendCompleted];
+
+}
 
 - (void)RACSignalDemo{
     // RACSignal: 信号类,当我们有数据产生,创建一个信号!
@@ -43,7 +291,9 @@
         //发送错误互斥
         [subscriber sendNext:@"大妹子，我也来了"];
         
-        [subscriber sendError:[NSError errorWithDomain:@"what" code:-100 userInfo:nil]];
+        [subscriber sendNext:@"小妹子1，我来了"];
+        //发送错误互斥
+        [subscriber sendNext:@"大妹子1，我也来了"];
         [subscriber sendCompleted];
         
         return [RACDisposable disposableWithBlock:^{
@@ -53,7 +303,7 @@
     //2.订阅信号
     //nextBlock调用:只要订阅者发送数据就会调用!
     //nextBlock作用:处理数据,展示UI界面!
-    RACDisposable *disposable =  [singal  subscribeNext:^(id x) {
+    RACDisposable *disposable =  [[singal startWith:@"小妹子1，我来了"]  subscribeNext:^(id x) {
         NSLog(@"subscribe value = %@",x);
     } error:^(NSError *error) {
         NSLog(@"subcribe error = %@",error);

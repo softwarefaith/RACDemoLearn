@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "A403B9AD0CB5D93C475B6BC52DB0DBE7F8F706B3",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "A403B9AD0CB5D93C475B6BC52DB0DBE7F8F706B3" : 9223372036854775807,
+    "6D89E27C1F8CEB417A1C8CC6DE1EAEF039305CB7" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "EA87146D-F0CC-43AD-AAA5-3A55BF6A4DD9",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "A403B9AD0CB5D93C475B6BC52DB0DBE7F8F706B3" : "RACDemoLearn\/",
+    "6D89E27C1F8CEB417A1C8CC6DE1EAEF039305CB7" : "RACDemoLearn\/RACDemoLearn\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "RACDemoLearn",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "RACDemoLearn.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/softwarefaith\/RACDemoLearn.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "6D89E27C1F8CEB417A1C8CC6DE1EAEF039305CB7"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/softwarefaith\/RACDemoLearn.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "A403B9AD0CB5D93C475B6BC52DB0DBE7F8F706B3"
+    }
+  ]
+}
