@@ -27,13 +27,23 @@
  //   [self notifyRAC];
    // [self RACSignalDemo];
     
-    [self switchRACWithIndex:5];
+    [self switchRACWithIndex:7];
 }
 
 #pragma mark - RAC总类
 -(void)switchRACWithIndex:(NSInteger)index{
     
     switch (index) {
+            
+        case 7:{
+            
+            [self demoOfZip];
+            break;
+        }
+        case 6:{
+            [self demoOfConat];
+            break;
+        }
         case 5:{
             
             [self demoOfBind];
@@ -116,6 +126,70 @@ RACSignal *signal = [[NSNotificationCenter defaultCenter] rac_addObserverForName
         NSLog(@"我收到了通知%@",x.object);
     }];
     
+}
+
+-(void)demoOfZip{
+    
+    
+    
+    //A B至少发送一次消息nextblock
+    RACSignal *A  = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+        
+       [subscriber sendNext:@"A0"];
+        [subscriber sendNext:@"A1"];
+
+       // [subscriber sendCompleted];
+        return [RACDisposable disposableWithBlock:^{
+            NSLog(@"A 摧毁");
+        }];
+    }];
+    
+    RACSignal *B = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+        [subscriber sendNext:@"B0"];
+        [subscriber sendNext:@"B1"];
+
+       // [subscriber sendError:nil];
+        return [RACDisposable disposableWithBlock:^{
+            NSLog(@"B 摧毁");
+        }];    }];
+    
+    RACTuple
+    
+    RACSignal *C = [A zipWith:B];
+    
+    RACDisposable *cd =   [C subscribeNext:^(id x) { //返回RACTuple
+        NSLog(@"C == %@",x);
+    }];
+    
+    [cd dispose];
+}
+
+-(void)demoOfConat{
+    
+    
+    RACSignal *A  = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+        
+        [subscriber sendNext:@"A"];
+        [subscriber sendCompleted];
+        return [RACDisposable disposableWithBlock:^{
+            NSLog(@"A 摧毁");
+        }];
+    }];
+    
+    RACSignal *B = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+        [subscriber sendNext:@"B"];
+        return [RACDisposable disposableWithBlock:^{
+            NSLog(@"B 摧毁");
+        }];    }];
+    
+    
+    RACSignal *C = [A concat:B];
+    
+   RACDisposable *cd =   [C subscribeNext:^(id x) {
+        NSLog(@"C == %@",x);
+    }];
+    
+    [cd dispose];
 }
 
 -(void)demoOfBind{
