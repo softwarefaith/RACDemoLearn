@@ -27,13 +27,30 @@
  //   [self notifyRAC];
    // [self RACSignalDemo];
     
-    [self switchRACWithIndex:7];
+    [self switchRACWithIndex:9];
+    
+//    void (^t2)() = ^(id name){
+//        NSLog(@"我服了===%@",name);
+//        return;
+//    };
+//    
+//    t2(@"123");
 }
 
 #pragma mark - RAC总类
 -(void)switchRACWithIndex:(NSInteger)index{
     
     switch (index) {
+            
+        case 9:{
+            [self demoOfReduce];
+            break;
+        }
+    
+        case 8:{
+            [self demoOfMap];
+            break;
+        }
             
         case 7:{
             
@@ -128,6 +145,70 @@ RACSignal *signal = [[NSNotificationCenter defaultCenter] rac_addObserverForName
     
 }
 
+-(void)demoOfReduce{
+    
+    
+    RACSignal *A  = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+        
+        
+         RACTuple *t = [RACTuple tupleWithObjects:@10, @5,@20, nil];
+        [subscriber sendNext:t];
+      //  [subscriber sendNext:@"20"];
+        
+        // [subscriber sendCompleted];
+        return [RACDisposable disposableWithBlock:^{
+            NSLog(@"A 摧毁");
+        }];
+    }];
+
+    
+    RACSignal *B = [A reduceEach:^id(id number,id number2){
+        
+        NSLog(@"B=%@",number);
+        return @([number integerValue] + [number2 integerValue]);
+    }];
+    
+    [B subscribeNext:^(id x) {
+        NSLog(@"-----%@",x);
+    }];
+    
+    
+}
+
+-(void)demoOfMap{
+    
+    RACSignal *A  = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+        
+        [subscriber sendNext:@"10"];
+        [subscriber sendNext:@"20"];
+        
+        // [subscriber sendCompleted];
+        return [RACDisposable disposableWithBlock:^{
+            NSLog(@"A 摧毁");
+        }];
+    }];
+    
+    
+   RACSignal *C =  [A mapReplace:@"50"];
+    
+    RACSignal *B = [A  map:^id(id value) {
+        return @([value integerValue] * 10);
+    }];
+    
+    
+    
+    [B subscribeNext:^(id x) {
+       
+        NSLog(@"%@",x);
+    }];
+    
+    [C subscribeNext:^(id x) {
+        
+        NSLog(@"C接收%@",x);
+    }];
+    
+    
+}
 -(void)demoOfZip{
     
     
@@ -153,7 +234,6 @@ RACSignal *signal = [[NSNotificationCenter defaultCenter] rac_addObserverForName
             NSLog(@"B 摧毁");
         }];    }];
     
-    RACTuple
     
     RACSignal *C = [A zipWith:B];
     
